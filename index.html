@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <title>Registrasi Top-Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F3F4FB5C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            width: 95%;
+            max-width: 600px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 95%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .payment-info {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .payment-info img {
+            width: 100px;
+            height: 100px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .payment-info p {
+            margin-bottom: 10px;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .price-options {
+            display: none;
+        }
+    </style>
+    <script>
+        function showPaymentInfo() {
+            const paymentMethod = document.querySelector('select[name="payment-method"]').value;
+            const paypalInfo = document.getElementById('paypal-info');
+            const danaInfo = document.getElementById('dana-info');
+            const paypalPrices = document.getElementById('paypal-prices');
+            const danaPrices = document.getElementById('dana-prices');
+            
+            paypalInfo.style.display = 'none';
+            danaInfo.style.display = 'none';
+            paypalPrices.style.display = 'none';
+            danaPrices.style.display = 'none';
+
+            if (paymentMethod === 'paypal') {
+                paypalInfo.style.display = 'block';
+                paypalPrices.style.display = 'block';
+            } else if (paymentMethod === 'dana') {
+                danaInfo.style.display = 'block';
+                danaPrices.style.display = 'block';
+            }
+        }
+
+        function copyToClipboardAndRedirect(text, url) {
+            const tempInput = document.createElement('input');
+            tempInput.style.position = 'absolute';
+            tempInput.style.left = '-9999px';
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Email copied to clipboard');
+            window.location.href = url;
+        }
+
+        function downloadImageAndRedirect(url, filename, redirectUrl) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000); // 2 seconds delay
+        }
+
+        function generateWhatsAppLink(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const id = document.getElementById('id').value;
+            const gameUrl = document.getElementById('game-url').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            const price = paymentMethod === 'paypal' ? document.getElementById('paypal-price').value : document.getElementById('dana-price').value;
+
+            if (!name || !id || !paymentMethod || !price) {
+                alert('Isi data anda');
+                return;
+            }
+
+            const groupInviteLink = "https://chat.whatsapp.com/LwuqIFsXU69GPJhEwDdGyx/";
+            const message = `Nama: ${name}\nID: ${id}\nURL Game: ${gameUrl}\nMetode Pembayaran: ${paymentMethod}\nHarga: ${price}`;
+            const whatsappLink = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+            alert('Please click OK to proceed to WhatsApp. Remember to manually attach the payment proof image in the chat.');
+            window.open(groupInviteLink, '_blank');
+            window.open(whatsappLink, '_blank');
+        }
+    </script>
+</head>
+<body>
+  <img src="game.jpg">
+    <!-- Add your images or other elements here -->
+    <div class="form-group">
+        <label for="name" style="color: royalblue;">Nama Akun</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="id" style="color: royalblue;">ID</label>
+        <input type="text" id="id" name="id" required>
+    </div>
+    <div class="form-group">
+        <label for="game-url" style="color: royalblue;">URL Website Game</label>
+        <input type="text" id="game-url" name="game-url" required>
+    </div>
+    <div class="form-group">
+        <label for="payment-method" style="color: royalblue;">Metode Pembayaran</label>
+        <select id="payment-method" name="payment-method" onchange="showPaymentInfo()" required>
+            <option value="">Pilih Metode Pembayaran</option>
+            <option value="paypal">PayPal</option>
+            <option value="dana">DANA</option>
+        </select>
+    </div>
+    <div id="paypal-info" class="payment-info">
+        <p onclick="copyToClipboardAndRedirect('imoell10101988@gmail.com', 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=imoell10101988@gmail.com')"><button style="font-size: 8px;">PayPal Klik Untuk menyalin<br>Alamat Admin<br> imoell10101988@gmail.com</button></p>
+        <div id="paypal-prices" class="price-options">
+            <label for="paypal-price">Pilih Harga:</label>
+            <select id="paypal-price" name="paypal-price">
+                <option value="">- - Pilih Harga - -</option>
+                <option value="$3">$3</option>
+                <option value="$5">$5</option>
+                <option value="$7">$7</option>
+                <option value="$10">$10</option>
+            </select>
+        </div>
+    </div>
+    <div id="dana-info" class="payment-info">
+        <p><button style="font-size: 8px;">Scan Atau Klik logo barcode<br>Untuk Pembayaran</button></p>
+        <img src="barcode.jpg" style="width: 95%; height: 30%;" alt="DANA Barcode" onclick="downloadImageAndRedirect('barcode.jpg', 'barcode.jpg', 'https://link.dana.id/qrcode?bizno=imoell10101988')">
+        <div id="dana-prices" class="price-options">
+            <label for="dana-price">Pilih Harga:</label>
+            <select id="dana-price" name="dana-price">
+                <option value="">- - Pilih Harga - -</option>
+                <option value="Rp 20.000">Rp 20.000</option>
+                <option value="Rp 50.000">Rp 50.000</option>
+                <option value="Rp 70.000">Rp 70.000</option>
+                <option value="Rp 100.000">Rp 100.000</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" onclick="generateWhatsAppLink(event);" style="width: 80%">Send</button>
+    <br>
+    <!-- Add your images or other elements here -->
+    <h5 style="color: black;">Sponsor</h5>
+    <img src="sponsor.jpg" style="width: 80%">
+    <br>
+     <p style="text-align: center; color: black;">Hak Cipta &copy; 2024 Toko Online Website</p>
+     <br>
+     <br>
+</body>
+</html>
